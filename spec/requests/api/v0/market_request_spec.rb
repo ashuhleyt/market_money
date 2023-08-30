@@ -75,4 +75,63 @@ RSpec.describe 'Market API', type: :request do
       end
     end
   end
+
+  describe 'GET /api/v0/markets/:id' do 
+    it 'returns a single market as well as attributes including vendor count *happy path*' do
+      id = create(:market).id
+
+      get "/api/v0/markets/#{id}"
+      market = JSON.parse(response.body, symbolize_names: true)
+      expect(response).to be_successful
+
+      expect(market).to be_a(Hash)
+      expect(market).to have_key(:data)
+
+      expect(market[:data]).to be_a(Hash)
+      expect(market[:data]).to have_key(:id)  
+      expect(market[:data][:id]).to be_a(String)
+
+      expect(market[:data]).to have_key(:type)
+      expect(market[:data][:type]).to eq("market")
+
+      expect(market[:data]).to have_key(:attributes)
+      expect(market[:data][:attributes]).to be_a(Hash)
+
+      expect(market[:data][:attributes]).to have_key(:name)
+      expect(market[:data][:attributes][:name]).to be_a(String)
+      
+      expect(market[:data][:attributes]).to have_key(:street)
+      expect(market[:data][:attributes][:street]).to be_a(String)
+
+      expect(market[:data][:attributes]).to have_key(:city)
+      expect(market[:data][:attributes][:city]).to be_a(String)
+
+      expect(market[:data][:attributes]).to have_key(:county)
+      expect(market[:data][:attributes][:county]).to be_a(String)
+
+      expect(market[:data][:attributes]).to have_key(:state)
+      expect(market[:data][:attributes][:state]).to be_a(String)
+
+      expect(market[:data][:attributes]).to have_key(:zip)
+      expect(market[:data][:attributes][:zip]).to be_a(String)
+
+      expect(market[:data][:attributes]).to have_key(:lat)
+      expect(market[:data][:attributes][:lat]).to be_a(String)
+
+      expect(market[:data][:attributes]).to have_key(:lon)
+      expect(market[:data][:attributes][:lon]).to be_a(String)
+
+      expect(market[:data][:attributes]).to have_key(:vendor_count)
+      expect(market[:data][:attributes][:vendor_count]).to be_an(Integer)
+    end
+
+    it 'returns a 404 if market does not exist' do
+      get "/api/v0/markets/0"
+
+      error_response = JSON.parse(response.body, symbolize_names: true)
+      
+      expect(response.status).to eq(404)
+      expect(error_response[:error]).to eq("Market not found")
+    end
+  end
 end
