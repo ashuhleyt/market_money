@@ -42,5 +42,19 @@ RSpec.describe 'Market API', type: :request do
         expect(vendor[:attributes][:credit_accepted]).to eq(true).or eq(false)
       end
     end
+
+    it 'returns a 404 if market does not exist' do
+      get "/api/v0/markets/123123123123/vendors"
+
+      expect(response).to have_http_status(404)
+
+      mv_error_response = JSON.parse(response.body, symbolize_names: true)
+      
+      expect(mv_error_response).to be_a(Hash)
+      # require 'pry'; binding.pry
+      expect(mv_error_response).to have_key(:error)
+      expect(mv_error_response[:error]).to eq("Couldnt find Market with 'id'=123123123123")
+
+    end
   end
 end

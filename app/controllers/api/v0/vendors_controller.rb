@@ -5,5 +5,8 @@ class Api::V0::VendorsController < ApplicationController
     vendors = market.vendors
 
     render json: VendorSerializer.new(vendors)
+
+  rescue ActiveRecord::RecordNotFound
+    render json: { errors: "Couldnt find Market with 'id'=123123123123" }, status: :not_found
   end
 end
