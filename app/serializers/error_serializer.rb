@@ -9,7 +9,7 @@ class ErrorSerializer
     {
      "errors": [
          {
-             "detail": "Couldn't find Vendor with 'id'=123123123123"
+             "detail": "Couldn't find Vendor with 'id'=123123123123123"
          }
       ]
     }
@@ -20,6 +20,16 @@ class ErrorSerializer
      "errors": [
          {
              "detail": "Validation failed: Contact name can't be blank, Contact phone can't be blank"
+         }
+     ]
+ }
+  end
+
+  def self.missing_vendor_name
+    {
+     "errors": [
+         {
+             "detail": "Validation failed: Contact name can't be blank"
          }
      ]
  }

@@ -26,6 +26,18 @@ class Api::V0::VendorsController < ApplicationController
     render json: ErrorSerializer.invalid_vendor_params, status: :bad_request
   end
 
+  def update
+    vendor = Vendor.find(params[:id])
+  if vendor.update(vendor_params)
+    render json: VendorSerializer.new(vendor)
+  else
+    render json: ErrorSerializer.missing_vendor_name, status: :bad_request
+  end
+  rescue ActiveRecord::RecordNotFound
+    render json: ErrorSerializer.invalid_vendor_id, status: :not_found
+end
+
+
   private
   def vendor_params
     params.require(:vendor).permit(:name, :description, :contact_name, :contact_phone, :credit_accepted)
