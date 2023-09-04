@@ -9,6 +9,5 @@ class Api::V0::MarketsController < ApplicationController
     render json: MarketSerializer.new(market)  # Use the serializer here
 
   rescue ActiveRecord::RecordNotFound
-    render json: { errors: 'Market not found' }, status: :not_found
-  end
+    render json: ErrorSerializer.invalid_market_id, status: :not_found
 end 
