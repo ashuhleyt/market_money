@@ -51,4 +51,32 @@ RSpec.describe 'Vendor API', type: :request do
       expect(vendor_error_response).to be_a(Hash)
     end
   end
+
+  describe 'POST /api/v0/vendors' do
+    it 'creates a new vendor, *happy path*' do
+      vendor_params = ({
+          name: "Hayes Hot Sauce",
+          description: "Locally made hot sauce",
+          contact_name: "Thomas Hayes",
+          contact_phone: "2532278489",
+          credit_accepted: true
+        })
+        headers = {"CONTENT_TYPE" => "application/json"}
+
+        post '/api/v0/vendors', headers: headers, params: JSON.generate(vendor: vendor_params)
+
+        expect(response).to be_successful
+
+        new_vendor = JSON.parse(response.body, symbolize_names: true)[:data]
+        expect(new_vendor).to be_a(Hash)
+        expect(new_vendor[:id]).to be_a(String)
+        expect(new_vendor[:type]).to eq('vendor')
+        expect(new_vendor[:attributes]).to be_a(Hash)
+        expect(new_vendor[:attributes][:name]).to eq(vendor_params[:name])
+        expect(new_vendor[:attributes][:description]).to eq(vendor_params[:description])
+        expect(new_vendor[:attributes][:contact_name]).to eq(vendor_params[:contact_name])
+        expect(new_vendor[:attributes][:contact_phone]).to eq(vendor_params[:contact_phone])
+        expect(new_vendor[:attributes][:credit_accepted]).to eq(vendor_params[:credit_accepted])
+    end
+  end
 end
