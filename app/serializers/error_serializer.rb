@@ -14,4 +14,14 @@ class ErrorSerializer
       ]
     }
   end
+
+  def self.invalid_vendor_params
+    {
+     "errors": [
+         {
+             "detail": "Validation failed: Contact name can't be blank, Contact phone can't be blank"
+         }
+     ]
+ }
+  end
 end

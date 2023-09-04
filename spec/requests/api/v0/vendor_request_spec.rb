@@ -78,5 +78,23 @@ RSpec.describe 'Vendor API', type: :request do
         expect(new_vendor[:attributes][:contact_phone]).to eq(vendor_params[:contact_phone])
         expect(new_vendor[:attributes][:credit_accepted]).to eq(vendor_params[:credit_accepted])
     end
+
+    it 'returns an error when a required field is missing' do
+      vendor_params = ({
+          # name: "Hayes Hot Sauce",
+          description: "Locally made hot sauce",
+          contact_name: "Thomas Hayes",
+          # contact_phone: "2532278489",
+          credit_accepted: true
+        })
+        headers = {"CONTENT_TYPE" => "application/json"}
+
+        post '/api/v0/vendors', headers: headers, params: JSON.generate(vendor: vendor_params)
+        expect(response.status).to eq(400)
+        not_created = JSON.parse(response.body, symbolize_names: true)
+        expect(not_created).to be_a(Hash)
+        expect(not_created[:errors]).to be_a(Array)
+        expect(not_created[:errors][0][:detail]).to eq("Validation failed: Contact name can't be blank, Contact phone can't be blank")
+    end
   end
 end
