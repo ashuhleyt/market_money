@@ -131,7 +131,7 @@ RSpec.describe 'Market API', type: :request do
       error_response = JSON.parse(response.body, symbolize_names: true)
 
       expect(response.status).to eq(404)
-      expect(error_response[:errors]).to eq("Market not found")
+      expect(error_response[:errors]).to eq("Couldnt find Market with 'id'=123123123123")
     end
   end
 end

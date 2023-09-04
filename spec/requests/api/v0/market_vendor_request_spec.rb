@@ -51,9 +51,9 @@ RSpec.describe 'Market API', type: :request do
       mv_error_response = JSON.parse(response.body, symbolize_names: true)
       
       expect(mv_error_response).to be_a(Hash)
-      # require 'pry'; binding.pry
-      expect(mv_error_response).to have_key(:error)
-      expect(mv_error_response[:error]).to eq("Couldnt find Market with 'id'=123123123123")
+
+      expect(mv_error_response).to have_key(:errors)
+      expect(mv_error_response[:errors]).to eq("Couldnt find Market with 'id'=123123123123")
 
     end
   end
