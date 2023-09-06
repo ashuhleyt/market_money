@@ -156,9 +156,31 @@ RSpec.describe 'Vendor API', type: :request do
       expect(response.status).to eq(400)
 
       error_response = JSON.parse(response.body, symbolize_names: true)
-      # require 'pry'; binding.pry
-      expect(error_response[:errors][0][:detail]).to eq("Validation failed: Contact name can't be blank")
 
+      expect(error_response[:errors][0][:detail]).to eq("Validation failed: Contact name can't be blank")
     end
   end
+
+  describe 'DELETE /api/v0/vendors/:id' do  
+    it 'deletes a vendor, *happy path*' do
+      id = @vendor1.id
+      expect(Vendor.exists?(id)).to eq(true)
+
+      delete "/api/v0/vendors/#{id}"
+
+      expect(response).to be_successful
+      expect(Vendor.exists?(id)).to eq(false)
+    end 
+
+    it 'returns an error when trying to delete an invalid vendor' do
+      id = 123123123123
+      delete "/api/v0/vendors/#{id}"
+
+      expect(response.status).to eq(404)
+
+      error_response = JSON.parse(response.body, symbolize_names: true)
+
+      expect(error_response[:errors].first[:detail]).to eq("Couldn't find Vendor with 'id'=123123123123123")
+    end
+  end 
 end
